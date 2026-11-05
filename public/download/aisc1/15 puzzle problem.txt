@@ -1,0 +1,298 @@
+
+import heapq
+
+# Goal State
+GOAL = (
+    1, 2, 3, 4,
+    5, 6, 7, 8,
+    9, 10, 11, 12,
+    13, 14, 15, 0
+)
+
+# Manhattan Distance Heuristic
+def manhattan(state):
+    distance = 0
+
+    for i in range(16):
+        if state[i] != 0:
+            goal_row = (state[i] - 1) // 4
+            goal_col = (state[i] - 1) % 4
+
+            curr_row = i // 4
+            curr_col = i % 4
+
+            distance += abs(goal_row - curr_row) + abs(goal_col - curr_col)
+
+    return distance
+
+
+# Generate Neighbor States
+def get_neighbors(state):
+    neighbors = []
+
+    zero = state.index(0)
+    row, col = divmod(zero, 4)
+
+    moves = [(-1,0), (1,0), (0,-1), (0,1)]
+
+    for dr, dc in moves:
+        nr = row + dr
+        nc = col + dc
+
+        if 0 <= nr < 4 and 0 <= nc < 4:
+            new_zero = nr * 4 + nc
+
+            temp = list(state)
+            temp[zero], temp[new_zero] = temp[new_zero], temp[zero]
+
+            neighbors.append(tuple(temp))
+
+    return neighbors
+
+
+# Print Board
+def print_board(state):
+    for i in range(0, 16, 4):
+        for x in state[i:i+4]:
+            if x == 0:
+                print("  ", end="\t")
+            else:
+                print(f"{x:2}", end="\t")
+        print()
+
+    print("-" * 30)
+
+
+# Check Puzzle Solvability
+def is_solvable(state):
+    arr = [x for x in state if x != 0]
+
+    inversions = 0
+
+    for i in range(len(arr)):
+        for j in range(i + 1, len(arr)):
+            if arr[i] > arr[j]:
+                inversions += 1
+
+    blank_row_from_bottom = 4 - (state.index(0) // 4)
+
+    return (inversions + blank_row_from_bottom) % 2 == 1
+
+
+# A* Search
+def a_star(start):
+    pq = []
+
+    heapq.heappush(pq, (manhattan(start), 0, start))
+
+    parent = {}
+    cost = {start: 0}
+
+    while pq:
+        f, g, current = heapq.heappop(pq)
+
+        if g != cost[current]:
+            continue
+
+        if current == GOAL:
+            path = []
+
+            while current in parent:
+                path.append(current)
+                current = parent[current]
+
+            path.append(start)
+            path.reverse()
+
+            return path
+
+        for neighbor in get_neighbors(current):
+            new_cost = g + 1
+
+            if neighbor not in cost or new_cost < cost[neighbor]:
+                cost[neighbor] = new_cost
+
+                priority = new_cost + manhattan(neighbor)
+
+                heapq.heappush(pq, (priority, new_cost, neighbor))
+
+                parent[neighbor] = current
+
+    return None
+
+
+# Main Program - User Input
+print("15 Puzzle Problem using A* Algorithm")
+print("Enter 16 numbers (0 represents the blank space):")
+
+try:
+    numbers = list(map(int, input().split()))
+
+    if len(numbers) != 16:
+        print("Error: Please enter exactly 16 numbers.")
+
+    elif sorted(numbers) != list(range(16)):
+        print("Error: Enter numbers from 0 to 15 without repetition.")
+
+    else:
+        start = tuple(numbers)
+
+        print("\nInitial State:")
+        print_board(start)
+
+        if not is_solvable(start):
+            print("This puzzle is not solvable!")
+        else:
+            solution = a_star(start)
+
+            if solution:
+                print("\n15 Puzzle Solution using A* Algorithm\n")
+
+                for step, state in enumerate(solution):
+                    print("Step", step)
+                    print_board(state)
+
+                print("Goal Reached!")
+                print("Total Moves =", len(solution) - 1)
+
+            else:
+                print("No Solution Found.")
+
+except ValueError:
+    print("Error: Please enter only integer values.")
+
+
+
+
+OUTPUT:
+
+15 Puzzle Problem using A* Algorithm
+Enter 16 numbers (0 represents the blank space):
+1 2 3 4 6 7 5 8 9 10 11 12 13 14 15 0
+
+Initial State:
+ 1	 2	 3	 4	
+ 6	 7	 5	 8	
+ 9	10	11	12	
+13	14	15	  	
+------------------------------
+
+15 Puzzle Solution using A* Algorithm
+
+Step 0
+ 1	 2	 3	 4	
+ 6	 7	 5	 8	
+ 9	10	11	12	
+13	14	15	  	
+------------------------------
+Step 1
+ 1	 2	 3	 4	
+ 6	 7	 5	 8	
+ 9	10	11	  	
+13	14	15	12	
+------------------------------
+Step 2
+ 1	 2	 3	 4	
+ 6	 7	 5	 8	
+ 9	10	  	11	
+13	14	15	12	
+------------------------------
+Step 3
+ 1	 2	 3	 4	
+ 6	 7	  	 8	
+ 9	10	 5	11	
+13	14	15	12	
+------------------------------
+Step 4
+ 1	 2	 3	 4	
+ 6	  	 7	 8	
+ 9	10	 5	11	
+13	14	15	12	
+------------------------------
+Step 5
+ 1	 2	 3	 4	
+  	 6	 7	 8	
+ 9	10	 5	11	
+13	14	15	12	
+------------------------------
+Step 6
+ 1	 2	 3	 4	
+ 9	 6	 7	 8	
+  	10	 5	11	
+13	14	15	12	
+------------------------------
+Step 7
+ 1	 2	 3	 4	
+ 9	 6	 7	 8	
+10	  	 5	11	
+13	14	15	12	
+------------------------------
+Step 8
+ 1	 2	 3	 4	
+ 9	 6	 7	 8	
+10	 5	  	11	
+13	14	15	12	
+------------------------------
+Step 9
+ 1	 2	 3	 4	
+ 9	 6	  	 8	
+10	 5	 7	11	
+13	14	15	12	
+------------------------------
+Step 10
+ 1	 2	 3	 4	
+ 9	  	 6	 8	
+10	 5	 7	11	
+13	14	15	12	
+------------------------------
+Step 11
+ 1	 2	 3	 4	
+ 9	 5	 6	 8	
+10	  	 7	11	
+13	14	15	12	
+------------------------------
+Step 12
+ 1	 2	 3	 4	
+ 9	 5	 6	 8	
+  	10	 7	11	
+13	14	15	12	
+------------------------------
+Step 13
+ 1	 2	 3	 4	
+  	 5	 6	 8	
+ 9	10	 7	11	
+13	14	15	12	
+------------------------------
+Step 14
+ 1	 2	 3	 4	
+ 5	  	 6	 8	
+ 9	10	 7	11	
+13	14	15	12	
+------------------------------
+Step 15
+ 1	 2	 3	 4	
+ 5	 6	  	 8	
+ 9	10	 7	11	
+13	14	15	12	
+------------------------------
+Step 16
+ 1	 2	 3	 4	
+ 5	 6	 7	 8	
+ 9	10	  	11	
+13	14	15	12	
+------------------------------
+Step 17
+ 1	 2	 3	 4	
+ 5	 6	 7	 8	
+ 9	10	11	  	
+13	14	15	12	
+------------------------------
+Step 18
+ 1	 2	 3	 4	
+ 5	 6	 7	 8	
+ 9	10	11	12	
+13	14	15	  	
+------------------------------
+Goal Reached!
+Total Moves = 18
+

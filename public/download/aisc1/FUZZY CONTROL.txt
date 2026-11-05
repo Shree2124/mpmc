@@ -1,0 +1,63 @@
+
+print("FUZZY CONTROL SYSTEM")
+print("--------------------")
+
+# User Input
+temperature = float(input("Enter temperature (°C): "))
+
+# Fuzzy Membership Values
+if temperature <= 20:
+    cold = 1
+else:
+    cold = max(0, (30 - temperature) / 10)
+
+if 20 < temperature < 35:
+    warm = min((temperature - 20) / 10, (40 - temperature) / 10)
+    warm = max(0, warm)
+else:
+    warm = 0
+
+if temperature >= 30:
+    hot = min(1, (temperature - 30) / 10)
+else:
+    hot = 0
+
+# Fuzzy Rules
+if cold >= warm and cold >= hot:
+    fan_speed = 20
+    status = "LOW"
+
+elif warm >= cold and warm >= hot:
+    fan_speed = 50
+    status = "MEDIUM"
+
+else:
+    fan_speed = 90
+    status = "HIGH"
+
+# Display Result
+print("\nFUZZY CONTROL RESULT")
+print("--------------------")
+print("Temperature :", temperature, "°C")
+print("Cold        :", round(cold, 2))
+print("Warm        :", round(warm, 2))
+print("Hot         :", round(hot, 2))
+print("Fan Speed   :", fan_speed, "%")
+print("Fan Status  :", status)
+
+
+
+OUTPUT:
+
+FUZZY CONTROL SYSTEM
+--------------------
+Enter temperature (°C): 25
+
+FUZZY CONTROL RESULT
+--------------------
+Temperature : 25.0 °C
+Cold        : 0.5
+Warm        : 0.5
+Hot         : 0
+Fan Speed   : 20 %
+Fan Status  : LOW

@@ -1,0 +1,88 @@
+# Graph represented using adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F', 'G'],
+    'D': [],
+    'E': ['H'],
+    'F': [],
+    'G': [],
+    'H': []
+}
+
+
+# Depth Limited Search
+def depth_limited_search(node, goal, limit, path, visited):
+    visited.add(node)
+    path.append(node)
+
+    if node == goal:
+        return True
+
+    if limit == 0:
+        path.pop()
+        visited.remove(node)
+        return False
+
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            if depth_limited_search(neighbor, goal, limit - 1, path, visited):
+                return True
+
+    path.pop()
+    visited.remove(node)
+    return False
+
+
+# DFID Algorithm
+def dfid(start, goal, max_depth):
+    print("Depth First Iterative Deepening (DFID)")
+
+    for depth in range(max_depth + 1):
+
+        print(f"\nSearching with Depth Limit = {depth}")
+
+        path = []
+        visited = set()
+
+        if depth_limited_search(start, goal, depth, path, visited):
+            print("\nGoal Found!")
+            print("Depth =", depth)
+            return path
+
+    return None
+
+
+# Driver Code
+start_node = 'A'
+goal_node = 'H'
+maximum_depth = 5
+
+result = dfid(start_node, goal_node, maximum_depth)
+
+if result:
+    print("\nPath Found:")
+    print(" -> ".join(result))
+else:
+    print("\nGoal Not Found within Maximum Depth.")
+
+
+
+
+OUTPUT:
+
+Depth First Iterative Deepening (DFID)
+
+Searching with Depth Limit = 0
+
+Searching with Depth Limit = 1
+
+Searching with Depth Limit = 2
+
+Searching with Depth Limit = 3
+
+Goal Found!
+Depth = 3
+
+Path Found:
+A -> B -> E -> H

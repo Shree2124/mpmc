@@ -1,0 +1,143 @@
+
+import math
+
+class FuzzyMembership:
+
+    def triangular(self, x, a, b, c):
+        if x <= a or x >= c:
+            return 0.0
+        elif x == b:
+            return 1.0
+        elif x < b:
+            return (x - a) / (b - a)
+        else:
+            return (c - x) / (c - b)
+
+    def trapezoidal(self, x, a, b, c, d):
+        if x <= a or x >= d:
+            return 0.0
+        elif b <= x <= c:
+            return 1.0
+        elif x < b:
+            return (x - a) / (b - a)
+        else:
+            return (d - x) / (d - c)
+
+    def gaussian(self, x, c, sigma):
+        return math.exp(-((x - c) ** 2) / (2 * sigma ** 2))
+
+
+# Main Program
+print("FUZZY MEMBERSHIP FUNCTIONS")
+print("--------------------------")
+
+# User Input Values
+n = int(input("Enter number of input values: "))
+
+values = []
+
+print("\nEnter input values:")
+
+for i in range(n):
+    value = float(input("Enter value " + str(i + 1) + ": "))
+    values.append(value)
+
+
+# Triangular Parameters
+print("\nEnter Triangular Membership parameters")
+
+a = float(input("Enter a: "))
+b = float(input("Enter b: "))
+c = float(input("Enter c: "))
+
+triangular_parameters = (a, b, c)
+
+
+# Trapezoidal Parameters
+print("\nEnter Trapezoidal Membership parameters")
+
+a = float(input("Enter a: "))
+b = float(input("Enter b: "))
+c = float(input("Enter c: "))
+d = float(input("Enter d: "))
+
+trapezoidal_parameters = (a, b, c, d)
+
+
+# Gaussian Parameters
+print("\nEnter Gaussian Membership parameters")
+
+center = float(input("Enter center: "))
+sigma = float(input("Enter sigma: "))
+
+gaussian_parameters = (center, sigma)
+
+
+# Create Object
+fuzzy = FuzzyMembership()
+
+
+# Display Results
+print("\nFUZZY MEMBERSHIP RESULTS")
+print("---------------------------------------------")
+print("Input\tTriangular\tTrapezoidal\tGaussian")
+print("---------------------------------------------")
+
+for value in values:
+
+    triangular = fuzzy.triangular(
+        value, *triangular_parameters
+    )
+
+    trapezoidal = fuzzy.trapezoidal(
+        value, *trapezoidal_parameters
+    )
+
+    gaussian = fuzzy.gaussian(
+        value, *gaussian_parameters
+    )
+
+    print(
+        f"{value:g}\t{triangular:.3f}\t\t"
+        f"{trapezoidal:.3f}\t\t{gaussian:.3f}"
+    )
+
+print("---------------------------------------------")
+
+
+
+
+
+OUTPUT:
+FUZZY MEMBERSHIP FUNCTIONS
+--------------------------
+Enter number of input values: 3
+
+Enter input values:
+Enter value 1: 5
+Enter value 2: 6
+Enter value 3: 8
+
+Enter Triangular Membership parameters
+Enter a: 4
+Enter b: 5
+Enter c: 9
+
+Enter Trapezoidal Membership parameters
+Enter a: 3
+Enter b: 8
+Enter c: 9
+Enter d: 8
+
+Enter Gaussian Membership parameters
+Enter center: 5.0
+Enter sigma: 4.5
+
+FUZZY MEMBERSHIP RESULTS
+---------------------------------------------
+Input	Triangular	Trapezoidal	Gaussian
+---------------------------------------------
+5	1.000		0.400		1.000
+6	0.750		0.600		0.976
+8	0.250		0.000		0.801
+---------------------------------------------

@@ -1,0 +1,97 @@
+import random
+
+print("GENETIC ALGORITHM")
+print("-----------------")
+
+population_size = int(input("Enter population size: "))
+generations = int(input("Enter number of generations: "))
+lower = int(input("Enter lower limit: "))
+upper = int(input("Enter upper limit: "))
+
+def fitness(x):
+    return x * x
+
+population = []
+
+for i in range(population_size):
+    population.append(random.randint(lower, upper))
+
+for generation in range(generations):
+
+    fitness_values = []
+
+    for x in population:
+        fitness_values.append(fitness(x))
+
+    best_index = fitness_values.index(max(fitness_values))
+    best_solution = population[best_index]
+    best_fitness = fitness_values[best_index]
+
+    print(
+        f"Generation {generation + 1}: "
+        f"Best = {best_solution}, "
+        f"Fitness = {best_fitness}"
+    )
+
+    sorted_population = [
+        x for _, x in sorted(
+            zip(fitness_values, population),
+            reverse=True
+        )
+    ]
+
+    parent1 = sorted_population[0]
+    parent2 = sorted_population[1]
+
+    child1 = (parent1 + parent2) // 2
+    child2 = random.randint(lower, upper)
+
+    if random.random() < 0.2:
+        child1 += random.randint(-2, 2)
+
+    if random.random() < 0.2:
+        child2 += random.randint(-2, 2)
+
+    child1 = max(lower, min(upper, child1))
+    child2 = max(lower, min(upper, child2))
+
+    population = [
+        parent1,
+        parent2,
+        child1,
+        child2
+    ]
+
+    while len(population) < population_size:
+        population.append(random.randint(lower, upper))
+
+print("\nFINAL RESULT")
+print("------------")
+print("Best Solution :", best_solution)
+print("Best Fitness  :", best_fitness)
+
+
+OUTPUT:
+
+
+GENETIC ALGORITHM
+-----------------
+Enter population size: 5
+Enter number of generations: 10
+Enter lower limit: 0
+Enter upper limit: 20
+Generation 1: Best = 18, Fitness = 324
+Generation 2: Best = 18, Fitness = 324
+Generation 3: Best = 18, Fitness = 324
+Generation 4: Best = 19, Fitness = 361
+Generation 5: Best = 20, Fitness = 400
+Generation 6: Best = 20, Fitness = 400
+Generation 7: Best = 20, Fitness = 400
+Generation 8: Best = 20, Fitness = 400
+Generation 9: Best = 20, Fitness = 400
+Generation 10: Best = 20, Fitness = 400
+
+FINAL RESULT
+------------
+Best Solution : 20
+Best Fitness  : 400

@@ -1,0 +1,125 @@
+# Alpha-Beta Pruning
+
+import math
+
+step = 1
+
+def alpha_beta(depth, nodeIndex, maximizingPlayer, values, alpha, beta, maxDepth):
+    global step
+
+    # Leaf Node
+    if depth == maxDepth:
+        print(f"Step {step}: Leaf Node {nodeIndex} -> Value = {values[nodeIndex]}")
+        step += 1
+        return values[nodeIndex]
+
+    if maximizingPlayer:
+        best = -math.inf
+        print(f"\nStep {step}: MAX Node (Depth {depth})")
+        print(f"Alpha = {alpha}, Beta = {beta}")
+        step += 1
+
+        for i in range(2):
+            value = alpha_beta(depth + 1,
+                               nodeIndex * 2 + i,
+                               False,
+                               values,
+                               alpha,
+                               beta,
+                               maxDepth)
+
+            best = max(best, value)
+            alpha = max(alpha, best)
+
+            print(f"Updated MAX = {best}, Alpha = {alpha}, Beta = {beta}")
+
+            if alpha >= beta:
+                print(">>> Beta Cutoff (Pruning)")
+                break
+
+        return best
+
+    else:
+        best = math.inf
+        print(f"\nStep {step}: MIN Node (Depth {depth})")
+        print(f"Alpha = {alpha}, Beta = {beta}")
+        step += 1
+
+        for i in range(2):
+            value = alpha_beta(depth + 1,
+                               nodeIndex * 2 + i,
+                               True,
+                               values,
+                               alpha,
+                               beta,
+                               maxDepth)
+
+            best = min(best, value)
+            beta = min(beta, best)
+
+            print(f"Updated MIN = {best}, Alpha = {alpha}, Beta = {beta}")
+
+            if alpha >= beta:
+                print(">>> Alpha Cutoff (Pruning)")
+                break
+
+        return best
+
+depth = int(input("Enter depth of tree: "))
+
+leaf_nodes = 2 ** depth
+print(f"Enter {leaf_nodes} leaf node values:")
+
+values = []
+for i in range(leaf_nodes):
+    val = int(input(f"Value {i + 1}: "))
+    values.append(val)
+
+print("\nLeaf Node Values:", values)
+
+result = alpha_beta(
+    depth=0,
+    nodeIndex=0,
+    maximizingPlayer=True,
+    values=values,
+    alpha=-math.inf,
+    beta=math.inf,
+    maxDepth=depth
+)
+
+print("\n--------------------------------")
+print("Optimal Value =", result)
+
+
+OUTPUT
+
+Enter depth of tree: 2
+Enter 4 leaf node values:
+Value 1: 4
+Value 2: 5
+Value 3: 7
+Value 4: 9
+
+Leaf Node Values: [4, 5, 7, 9]
+
+Step 1: MAX Node (Depth 0)
+Alpha = -inf, Beta = inf
+
+Step 2: MIN Node (Depth 1)
+Alpha = -inf, Beta = inf
+Step 3: Leaf Node 0 -> Value = 4
+Updated MIN = 4, Alpha = -inf, Beta = 4
+Step 4: Leaf Node 1 -> Value = 5
+Updated MIN = 4, Alpha = -inf, Beta = 4
+Updated MAX = 4, Alpha = 4, Beta = inf
+
+Step 5: MIN Node (Depth 1)
+Alpha = 4, Beta = inf
+Step 6: Leaf Node 2 -> Value = 7
+Updated MIN = 7, Alpha = 4, Beta = 7
+Step 7: Leaf Node 3 -> Value = 9
+Updated MIN = 7, Alpha = 4, Beta = 7
+Updated MAX = 7, Alpha = 7, Beta = inf
+
+--------------------------------
+Optimal Value = 7

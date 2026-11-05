@@ -1,0 +1,186 @@
+
+import math
+
+# K-Means Clustering
+class KMeans:
+
+    # Calculate Euclidean Distance
+    def distance(self, point1, point2):
+        total = 0
+
+        for i in range(len(point1)):
+            total += (point1[i] - point2[i]) ** 2
+
+        return math.sqrt(total)
+
+    # Train K-Means Model
+    def train(self, data, k, max_iterations=100):
+
+        # Initialize Centroids
+        centroids = [data[i][:] for i in range(k)]
+        clusters = [0] * len(data)
+
+        print("\nTraining Started...\n")
+
+        for iteration in range(1, max_iterations + 1):
+
+            # Assign Points to Nearest Centroid
+            for i in range(len(data)):
+                distances = []
+
+                for centroid in centroids:
+                    distances.append(
+                        self.distance(data[i], centroid)
+                    )
+
+                clusters[i] = distances.index(min(distances))
+
+            # Calculate New Centroids
+            new_centroids = []
+
+            for cluster in range(k):
+                cluster_points = []
+
+                for i in range(len(data)):
+                    if clusters[i] == cluster:
+                        cluster_points.append(data[i])
+
+                if len(cluster_points) == 0:
+                    new_centroids.append(centroids[cluster])
+                    continue
+
+                dimensions = len(data[0])
+                new_centroid = []
+
+                for j in range(dimensions):
+                    total = 0
+
+                    for point in cluster_points:
+                        total += point[j]
+
+                    new_centroid.append(
+                        total / len(cluster_points)
+                    )
+
+                new_centroids.append(new_centroid)
+
+            print("Iteration", iteration,
+                  "- Centroids:", new_centroids)
+
+            # Check Convergence
+            if new_centroids == centroids:
+                print("\nClustering Completed Successfully.")
+                centroids = new_centroids
+                break
+
+            centroids = new_centroids
+
+        # Final Cluster Assignment
+        for i in range(len(data)):
+            distances = [
+                self.distance(data[i], centroid)
+                for centroid in centroids
+            ]
+
+            clusters[i] = distances.index(min(distances))
+
+        return clusters, centroids
+
+
+# Main Program
+print("K-MEANS CLUSTERING ALGORITHM")
+print("----------------------------")
+
+# User Input
+n = int(input("Enter number of data points: "))
+dimensions = int(input("Enter number of dimensions: "))
+
+data = []
+
+print("\nEnter Data Points:")
+
+for i in range(n):
+    point = []
+
+    print("\nData Point", i + 1)
+
+    for j in range(dimensions):
+        value = float(input("Enter coordinate " + str(j + 1) + ": "))
+        point.append(value)
+
+    data.append(point)
+
+# Number of Clusters
+k = int(input("\nEnter number of clusters (K): "))
+
+if k < 1 or k > n:
+    print("Invalid K! Enter K between 1 and", n)
+
+else:
+    # Create K-Means Model
+    kmeans = KMeans()
+
+    # Train Model
+    clusters, centroids = kmeans.train(data, k)
+
+    # Display Final Centroids
+    print("\nFINAL CENTROIDS")
+    print("----------------")
+
+    for i in range(k):
+        print("Cluster", i + 1, ":", centroids[i])
+
+    # Display Cluster Assignments
+    print("\nCLUSTER ASSIGNMENTS")
+    print("-------------------")
+
+    for i in range(len(data)):
+        print(
+            "Point", i + 1, ":", data[i],
+            "-> Cluster", clusters[i] + 1
+        )
+
+
+
+
+
+OUTPUT:
+
+K-MEANS CLUSTERING ALGORITHM
+----------------------------
+Enter number of data points: 3
+Enter number of dimensions: 2
+
+Enter Data Points:
+
+Data Point 1
+Enter coordinate 1: 5
+Enter coordinate 2: 8
+
+Data Point 2
+Enter coordinate 1: 4
+Enter coordinate 2: 1
+
+Data Point 3
+Enter coordinate 1: 7
+Enter coordinate 2: 6
+
+Enter number of clusters (K): 2
+
+Training Started...
+
+Iteration 1 - Centroids: [[6.0, 7.0], [4.0, 1.0]]
+Iteration 2 - Centroids: [[6.0, 7.0], [4.0, 1.0]]
+
+Clustering Completed Successfully.
+
+FINAL CENTROIDS
+----------------
+Cluster 1 : [6.0, 7.0]
+Cluster 2 : [4.0, 1.0]
+
+CLUSTER ASSIGNMENTS
+-------------------
+Point 1 : [5.0, 8.0] -> Cluster 1
+Point 2 : [4.0, 1.0] -> Cluster 2
+Point 3 : [7.0, 6.0] -> Cluster 1

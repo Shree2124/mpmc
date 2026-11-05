@@ -1,0 +1,117 @@
+import numpy as np
+
+print("HOPFIELD ASSOCIATIVE MEMORY NETWORK")
+
+n = int(input("Enter number of patterns to store: "))
+
+patterns = []
+
+print("\nEnter patterns using 1 and -1")
+print("Example: 1 1 -1 -1 1")
+
+for i in range(n):
+
+    print("\nPattern", i + 1)
+
+    values = list(map(int, input("Enter pattern values: ").split()))
+
+    patterns.append(values)
+
+patterns = np.array(patterns)
+
+size = len(patterns[0])
+
+weights = np.zeros((size, size))
+
+for pattern in patterns:
+    weights += np.outer(pattern, pattern)
+
+np.fill_diagonal(weights, 0)
+
+weights = weights / n
+
+print("\nWeight Matrix:")
+print(weights)
+
+print("\nEnter noisy pattern for testing")
+
+test_pattern = list(
+    map(int, input("Enter test pattern values: ").split())
+)
+
+test_pattern = np.array(test_pattern)
+
+state = test_pattern.copy()
+
+iterations = int(input("Enter number of iterations: "))
+
+for iteration in range(iterations):
+
+    old_state = state.copy()
+
+    for i in range(size):
+
+        value = np.dot(weights[i], state)
+
+        if value >= 0:
+            state[i] = 1
+        else:
+            state[i] = -1
+
+    if np.array_equal(state, old_state):
+        break
+
+print("\nOriginal Test Pattern:")
+print(test_pattern)
+
+print("\nRecovered Pattern:")
+print(state)
+
+print("\nStored Pattern Comparison:")
+
+for i in range(n):
+
+    if np.array_equal(state, patterns[i]):
+        print("Recovered Pattern matches Pattern", i + 1)
+        break
+else:
+    print("No exact stored pattern found.")
+
+print("\nAssociative Memory Process Completed")
+
+
+
+
+
+OUTPUT:
+
+HOPFIELD ASSOCIATIVE MEMORY NETWORK
+Enter number of patterns to store: 1
+
+Enter patterns using 1 and -1
+Example: 1 1 -1 -1 1
+
+Pattern 1
+Enter pattern values: 1 -1 1 -1 1
+
+Weight Matrix:
+[[ 0. -1.  1. -1.  1.]
+ [-1.  0. -1.  1. -1.]
+ [ 1. -1.  0. -1.  1.]
+ [-1.  1. -1.  0. -1.]
+ [ 1. -1.  1. -1.  0.]]
+
+Enter noisy pattern for testing
+Enter test pattern values: 1 -1 -1 -1 1
+Enter number of iterations: 2
+
+Original Test Pattern:
+[ 1 -1 -1 -1  1]
+
+Recovered Pattern:
+[ 1 -1  1 -1  1]
+
+Stored Pattern Comparison:
+Recovered Pattern matches Pattern 1
+
+Associative Memory Process Completed

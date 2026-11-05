@@ -1,0 +1,83 @@
+
+import numpy as np
+
+# User Input
+print("Perceptron Learning Algorithm - AND Gate")
+
+X = []
+Y = []
+
+print("\nEnter 4 input combinations (X1, X2) and target output:")
+
+for i in range(4):
+    x1 = int(input("Enter X1: "))
+    x2 = int(input("Enter X2: "))
+    y = int(input("Enter Target Output: "))
+
+    X.append([x1, x2])
+    Y.append(y)
+
+X = np.array(X)
+Y = np.array(Y)
+
+# Initialize Weights and Bias
+W = np.array([0.0, 0.0])
+b = -0.5
+lr = 0.1
+
+# Activation Function
+def activation(x):
+    return 1 if x >= 0 else 0
+
+# Training
+for epoch in range(10):
+    for i in range(len(X)):
+        output = activation(np.dot(X[i], W) + b)
+
+        error = Y[i] - output
+
+        W += lr * error * X[i]
+        b += lr * error
+
+# Display Final Weights and Bias
+print("\nFinal Weights:", W)
+print("Final Bias:", b)
+
+# Display Final Output
+print("\nFinal Output:")
+
+for x in X:
+    output = activation(np.dot(x, W) + b)
+    print("Input =", x, "Output =", output)
+
+
+
+
+
+
+OUTPUT
+
+Perceptron Learning Algorithm - AND Gate
+
+Enter 4 input combinations (X1, X2) and target output:
+Enter X1: 0
+Enter X2: 0
+Enter Target Output: 0
+Enter X1: 0
+Enter X2: 1
+Enter Target Output: 0
+Enter X1: 1
+Enter X2: 0
+Enter Target Output: 1
+Enter X1: 1
+Enter X2: 1
+Enter Target Output: 1
+
+Final Weights: [0.3 0.1]
+Final Bias: -0.20000000000000004
+
+Final Output:
+Input = [0 0] Output = 0
+Input = [0 1] Output = 0
+Input = [1 0] Output = 1
+Input = [1 1] Output = 1

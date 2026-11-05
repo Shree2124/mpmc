@@ -1,0 +1,180 @@
+
+import math
+import random
+
+# Sigmoid Activation Function
+def sigmoid(x):
+    return 1 / (1 + math.exp(-max(-500, min(500, x))))
+
+
+# Initialize Weights
+random.seed(42)
+
+W1 = [[random.uniform(-0.5, 0.5) for _ in range(5)] for _ in range(5)]
+B1 = [0.0] * 5
+
+W2 = [random.uniform(-0.5, 0.5) for _ in range(5)]
+B2 = 0.0
+
+learning_rate = 0.1
+
+
+# Forward Propagation
+def predict(inputs):
+    hidden = []
+
+    for i in range(5):
+        total = B1[i]
+
+        for j in range(5):
+            total += inputs[j] * W1[i][j]
+
+        hidden.append(sigmoid(total))
+
+    output = B2
+
+    for i in range(5):
+        output += hidden[i] * W2[i]
+
+    return sigmoid(output), hidden
+
+
+# Training Data
+print("MLP SUPERVISED LEARNING")
+print("Enter Student Training Data")
+
+X = []
+Y = []
+
+n = int(input("Enter number of training records: "))
+
+for i in range(n):
+    print("\nStudent", i + 1)
+
+    attendance = float(input("Attendance (%): "))
+    practical = float(input("Practical Marks: "))
+    assignment = float(input("Assignment Marks: "))
+    behaviour = float(input("Class Behaviour (1-10): "))
+    internal = float(input("Internal Marks: "))
+
+    result = int(input("Result (1=Pass, 0=Fail): "))
+
+    # Normalize input values
+    X.append([
+        attendance / 100,
+        practical / 100,
+        assignment / 100,
+        behaviour / 10,
+        internal / 100
+    ])
+
+    Y.append(result)
+
+
+# Training the Neural Network
+epochs = 1000
+
+for epoch in range(epochs):
+
+    for inputs, target in zip(X, Y):
+
+        output, hidden = predict(inputs)
+
+        # Output Layer Error
+        error = target - output
+        delta_output = error * output * (1 - output)
+
+        # Hidden Layer Error
+        delta_hidden = []
+
+        for i in range(5):
+            delta_hidden.append(
+                hidden[i] * (1 - hidden[i]) *
+                W2[i] * delta_output
+            )
+
+        # Update Output Weights
+        for i in range(5):
+            W2[i] += learning_rate * delta_output * hidden[i]
+
+        B2 += learning_rate * delta_output
+
+        # Update Hidden Weights
+        for i in range(5):
+            for j in range(5):
+                W1[i][j] += (
+                    learning_rate * delta_hidden[i] * inputs[j]
+                )
+
+            B1[i] += learning_rate * delta_hidden[i]
+
+
+print("\nTraining Completed Successfully!")
+
+
+# Predict New Student Result
+print("\nEnter Student Details for Prediction")
+
+attendance = float(input("Attendance (%): "))
+practical = float(input("Practical Marks: "))
+assignment = float(input("Assignment Marks: "))
+behaviour = float(input("Class Behaviour (1-10): "))
+internal = float(input("Internal Marks: "))
+
+student = [
+    attendance / 100,
+    practical / 100,
+    assignment / 100,
+    behaviour / 10,
+    internal / 100
+]
+
+output, hidden = predict(student)
+
+print("\nPrediction Probability:", round(output * 100, 2), "%")
+
+if output >= 0.5:
+    print("Predicted Result: PASS")
+else:
+    print("Predicted Result: FAIL")
+
+
+
+
+
+
+
+OUTPUT
+
+MLP SUPERVISED LEARNING
+Enter Student Training Data
+Enter number of training records: 2
+
+Student 1
+Attendance (%): 15
+Practical Marks: 20
+Assignment Marks: 15
+Class Behaviour (1-10): 5
+Internal Marks: 8
+Result (1=Pass, 0=Fail): 1
+
+Student 2
+Attendance (%): 8
+Practical Marks: 18
+Assignment Marks: 8
+Class Behaviour (1-10): 2
+Internal Marks: 9
+Result (1=Pass, 0=Fail): 0
+
+Training Completed Successfully!
+
+Enter Student Details for Prediction
+Attendance (%): 85
+Practical Marks: 20
+Assignment Marks: 16
+Class Behaviour (1-10): 6
+Internal Marks: 16
+
+Prediction Probability: 54.9 %
+Predicted Result: PASS
+
