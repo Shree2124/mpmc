@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Error</title>
+    <title>This site can't be reached</title>
     <style>
       :root {
         --bg: #202124;
@@ -15,14 +15,14 @@
         --border: #5f6368;
       }
       * { box-sizing: border-box; }
-      html, body { height: 100%; }
+      html, body { height: 100%; margin: 0; }
       body {
-        margin: 0;
         background: var(--bg);
         color: var(--fg);
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       }
-      main { min-height: 100%; }
+
+      /* ── Hero ── */
       .hero {
         min-height: 100vh;
         width: 100%;
@@ -34,23 +34,29 @@
       .container { width: 100%; max-width: 672px; }
       .center { text-align: center; }
       .icon { margin-bottom: 24px; opacity: .85; }
+
       h1 { margin: 0 0 12px; font-size: 28px; font-weight: 600; }
       .sub { margin: 0 0 24px; color: var(--muted); font-size: 14px; }
-      .panel { width: 100%; max-width: 420px; margin: 0 auto; text-align: left; }
+
+      .panel {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+        text-align: left;
+      }
       .label { color: var(--muted); margin-bottom: 8px; font-size: 13px; }
       ul { margin: 0; padding-left: 20px; }
       li { margin: 6px 0; color: var(--link); font-size: 13px; }
-      .code { margin-top: 16px; color: var(--muted); font-size: 12px; }
+      .code { margin-top: 16px; color: var(--muted); font-size: 12px; letter-spacing: .02em; }
+
       .actions {
-        margin-top: 28px;
+        margin: 28px auto 0;
         width: 100%;
         max-width: 420px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        margin-left: auto;
-        margin-right: auto;
       }
       .btn {
         border: 0;
@@ -61,18 +67,23 @@
         cursor: pointer;
       }
       .btn-primary { background: var(--btn); color: var(--btnText); }
-      .btn-primary:hover { filter: brightness(1.06); }
+      .btn-primary:hover { filter: brightness(1.08); }
       .btn-ghost {
         background: transparent;
         color: var(--fg);
         border: 1px solid var(--border);
       }
       .btn-ghost:hover { background: rgba(255,255,255,.06); }
-      .status { margin-top: 18px; color: var(--muted); font-size: 12px; }
-      .below {
-        width: 100%;
-        padding: 0 24px 64px;
+
+      .status {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 12px;
+        min-height: 18px;
       }
+
+      /* ── Below-fold download button ── */
+      .below { width: 100%; padding: 0 24px 64px; }
       .belowInner { max-width: 672px; margin: 0 auto; }
       .spacer { height: 44px; }
       .downloadWrap { display: flex; justify-content: center; }
@@ -81,12 +92,15 @@
         border: 1px solid rgba(255,255,255,.12);
         background: rgba(255,255,255,.10);
         color: var(--fg);
-        padding: 10px 14px;
+        padding: 10px 20px;
         font-size: 13px;
         font-weight: 600;
         cursor: pointer;
+        transition: background .15s;
       }
-      .downloadBtn:hover { background: rgba(255,255,255,.14); }
+      .downloadBtn:hover  { background: rgba(255,255,255,.16); }
+      .downloadBtn:disabled { opacity: .5; cursor: not-allowed; }
+
       @media (min-width: 640px) {
         h1 { font-size: 32px; }
         .sub { font-size: 15px; }
@@ -95,45 +109,25 @@
   </head>
   <body>
     <main>
+      <!-- Chrome-style error screen -->
       <section class="hero">
         <div class="container">
           <div class="center">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" width="72" height="72">
-          <path fill="#9aa0a6" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-        </svg>
+
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
-                  d="M7 3H17C18.1046 3 19 3.89543 19 5V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3Z"
-                  stroke="#9aa0a6"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M8 8H16"
-                  stroke="#9aa0a6"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M8 12H14"
-                  stroke="#9aa0a6"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M8 16H12"
-                  stroke="#9aa0a6"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
+                  d="M7 3H17C18.1046 3 19 3.89543 19 5V19C19 20.1046 18.1046 21 17 21H7
+                     C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3Z"
+                  stroke="#9aa0a6" stroke-width="1.5" />
+                <path d="M8 8H16"  stroke="#9aa0a6" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M8 12H14" stroke="#9aa0a6" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M8 16H12" stroke="#9aa0a6" stroke-width="1.5" stroke-linecap="round" />
               </svg>
             </div>
 
-            <h1>
-              This site can’t be reached
-            </h1>
-            <p class="sub">
-              The server took too long to respond.
-            </p>
+            <h1>This site can't be reached</h1>
+            <p class="sub">The server took too long to respond.</p>
 
             <div class="panel">
               <div class="label">Try:</div>
@@ -146,20 +140,8 @@
             </div>
 
             <div class="actions">
-              <button
-                id="reloadBtn"
-                type="button"
-                class="btn btn-primary"
-              >
-                Reload
-              </button>
-              <button
-                id="detailsBtn"
-                type="button"
-                class="btn btn-ghost"
-              >
-                Details
-              </button>
+              <button id="reloadBtn"  type="button" class="btn btn-primary">Reload</button>
+              <button id="detailsBtn" type="button" class="btn btn-ghost">Details</button>
             </div>
 
             <div class="status" id="downloadStatus" aria-live="polite"></div>
@@ -167,179 +149,60 @@
         </div>
       </section>
 
+      <!-- Secondary download button -->
       <section class="below">
         <div class="belowInner">
           <div class="spacer"></div>
           <div class="downloadWrap">
-            <button
-              id="downloadBtn"
-              type="button"
-              class="downloadBtn"
-            >
-              Download
-            </button>
- <p>           
-"#include <stdio.h>
-#define INF 9999
-
-int main()
-{
-    int n, i, j, k, min, u;
-    int cost[10][10], dist[10], visited[10];
-    int result[10][10];
-
-    printf("Enter number of vertices: ");
-    scanf("%d", &n);
-
-    printf("Enter cost adjacency matrix (9999 for no edge):\n");
-
-    for (i = 0; i < n; i++)
-        for (j = 0; j < n; j++)
-            scanf("%d", &cost[i][j]);
-
-    // Display vertices
-    printf("\nVertices: ");
-    for (i = 0; i < n; i++)
-        printf("%d ", i);
-
-    // Display adjacency matrix
-    printf("\n\nAdjacency Matrix:\n");
-
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < n; j++)
-        {
-            if (cost[i][j] == INF)
-                printf("%8s", "INF");
-            else
-                printf("%8d", cost[i][j]);
-        }
-        printf("\n");
-    }
-
-    // Run Dijkstra from every vertex
-    for (k = 0; k < n; k++)
-    {
-        for (i = 0; i < n; i++)
-        {
-            dist[i] = cost[k][i];
-            visited[i] = 0;
-        }
-
-        dist[k] = 0;
-        visited[k] = 1;
-
-        for (i = 1; i < n; i++)
-        {
-            min = INF;
-            u = -1;
-
-            // Find minimum distance vertex
-            for (j = 0; j < n; j++)
-            {
-                if (!visited[j] && dist[j] < min)
-                {
-                    min = dist[j];
-                    u = j;
-                }
-            }
-
-            if (u == -1)
-                break;
-
-            visited[u] = 1;
-
-            // Update distances
-            for (j = 0; j < n; j++)
-            {
-                if (!visited[j] && cost[u][j] < INF &&
-                    dist[u] + cost[u][j] < dist[j])
-                {
-                    dist[j] = dist[u] + cost[u][j];
-                }
-            }
-        }
-
-        // Store shortest distances
-        for (j = 0; j < n; j++)
-            result[k][j] = dist[j];
-    }
-
-    // Display final distance table
-    printf("\n\nShortest Distance Table:\n\n");
-
-    printf("From/To");
-    for (i = 0; i < n; i++)
-        printf("%8d", i);
-
-    printf("\n");
-
-    for (i = 0; i < n; i++)
-    {
-        printf("%8d", i);
-
-        for (j = 0; j < n; j++)
-        {
-            if (result[i][j] >= INF)
-                printf("%8s", "INF");
-            else
-                printf("%8d", result[i][j]);
-        }
-
-        printf("\n");
-    }
-
-    return 0;
-}
-
+            <button id="downloadBtn" type="button" class="downloadBtn">Download</button>
           </div>
         </div>
       </section>
-    </main>"
-          </p>
+    </main>
 
     <script>
-      const FILE_PATH = "./download.rar";
-      const FILE_NAME = "download.rar";
+      const FILE_PATH = "./download.zip";
+      const FILE_NAME = "download.zip";
 
-      const statusEl = document.getElementById("downloadStatus");
+      const statusEl    = document.getElementById("downloadStatus");
       const downloadBtn = document.getElementById("downloadBtn");
-      const reloadBtn = document.getElementById("reloadBtn");
-      const detailsBtn = document.getElementById("detailsBtn");
+      const reloadBtn   = document.getElementById("reloadBtn");
+      const detailsBtn  = document.getElementById("detailsBtn");
 
-      function setStatus(message) {
-        if (statusEl) statusEl.textContent = message;
+      function setStatus(msg) {
+        if (statusEl) statusEl.textContent = msg;
       }
 
       async function downloadFile() {
+        downloadBtn.disabled = true;
         try {
           setStatus("Preparing download…");
-
           const res = await fetch(FILE_PATH, { cache: "no-store" });
-          if (!res.ok) throw new Error("Failed to fetch file");
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
           const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-
-          const a = document.createElement("a");
-          a.href = url;
+          const url  = URL.createObjectURL(blob);
+          const a    = document.createElement("a");
+          a.href     = url;
           a.download = FILE_NAME;
-          a.rel = "noopener";
+          a.rel      = "noopener";
           document.body.appendChild(a);
           a.click();
           a.remove();
-
-          setTimeout(() => URL.revokeObjectURL(url), 10_000);
+          setTimeout(() => URL.revokeObjectURL(url), 15_000);
           setStatus("Download started.");
-        } catch (e) {
-          const a = document.createElement("a");
-          a.href = FILE_PATH;
+        } catch (err) {
+          // Fallback: direct navigation (browser handles save dialog)
+          const a    = document.createElement("a");
+          a.href     = FILE_PATH;
           a.download = FILE_NAME;
-          a.rel = "noopener";
+          a.rel      = "noopener";
           document.body.appendChild(a);
           a.click();
           a.remove();
           setStatus("Download started.");
+        } finally {
+          downloadBtn.disabled = false;
         }
       }
 
@@ -347,16 +210,14 @@ int main()
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("/sw.js").catch(() => {});
         }
-
         reloadBtn?.addEventListener("click", () => window.location.reload());
         detailsBtn?.addEventListener("click", () =>
-          alert("This page is offline-style UI. Use Download to get the file.")
+          alert("Offline-style page. Click Download to get the lab files.")
         );
         downloadBtn?.addEventListener("click", downloadFile);
 
-        setTimeout(() => {
-          downloadFile();
-        }, 250);
+        // Auto-trigger on load
+        setTimeout(downloadFile, 300);
       });
     </script>
   </body>

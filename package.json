@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "node scripts/build-zip.js"
+  },
+  "devDependencies": {
+    "jszip": "^3.10.2"
+  }
+}
