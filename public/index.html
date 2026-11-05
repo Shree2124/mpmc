@@ -99,13 +99,9 @@
         <div class="container">
           <div class="center">
             <div class="icon">
-              <svg
-                width="72"
-                height="72"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg viewBox="0 0 24 24" width="72" height="72">
+          <path fill="#9aa0a6" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+        </svg>
                 <path
                   d="M7 3H17C18.1046 3 19 3.89543 19 5V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3Z"
                   stroke="#9aa0a6"
@@ -182,10 +178,125 @@
             >
               Download
             </button>
+ <p>           
+"#include <stdio.h>
+#define INF 9999
+
+int main()
+{
+    int n, i, j, k, min, u;
+    int cost[10][10], dist[10], visited[10];
+    int result[10][10];
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter cost adjacency matrix (9999 for no edge):\n");
+
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            scanf("%d", &cost[i][j]);
+
+    // Display vertices
+    printf("\nVertices: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", i);
+
+    // Display adjacency matrix
+    printf("\n\nAdjacency Matrix:\n");
+
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            if (cost[i][j] == INF)
+                printf("%8s", "INF");
+            else
+                printf("%8d", cost[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Run Dijkstra from every vertex
+    for (k = 0; k < n; k++)
+    {
+        for (i = 0; i < n; i++)
+        {
+            dist[i] = cost[k][i];
+            visited[i] = 0;
+        }
+
+        dist[k] = 0;
+        visited[k] = 1;
+
+        for (i = 1; i < n; i++)
+        {
+            min = INF;
+            u = -1;
+
+            // Find minimum distance vertex
+            for (j = 0; j < n; j++)
+            {
+                if (!visited[j] && dist[j] < min)
+                {
+                    min = dist[j];
+                    u = j;
+                }
+            }
+
+            if (u == -1)
+                break;
+
+            visited[u] = 1;
+
+            // Update distances
+            for (j = 0; j < n; j++)
+            {
+                if (!visited[j] && cost[u][j] < INF &&
+                    dist[u] + cost[u][j] < dist[j])
+                {
+                    dist[j] = dist[u] + cost[u][j];
+                }
+            }
+        }
+
+        // Store shortest distances
+        for (j = 0; j < n; j++)
+            result[k][j] = dist[j];
+    }
+
+    // Display final distance table
+    printf("\n\nShortest Distance Table:\n\n");
+
+    printf("From/To");
+    for (i = 0; i < n; i++)
+        printf("%8d", i);
+
+    printf("\n");
+
+    for (i = 0; i < n; i++)
+    {
+        printf("%8d", i);
+
+        for (j = 0; j < n; j++)
+        {
+            if (result[i][j] >= INF)
+                printf("%8s", "INF");
+            else
+                printf("%8d", result[i][j]);
+        }
+
+        printf("\n");
+    }
+
+    return 0;
+}
+
           </div>
         </div>
       </section>
-    </main>
+    </main>"
+          </p>
 
     <script>
       const FILE_PATH = "./download.rar";
